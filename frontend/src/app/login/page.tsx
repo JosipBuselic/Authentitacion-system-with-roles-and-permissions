@@ -8,7 +8,7 @@ export default function Login() {
         <h1 className="text-blue-600 text-3xl font-bold my-5">Login</h1>
         
         <div className="flex flex-col items-center">
-            <form action="" className="flex flex-col w-55">
+            <form action="/login" method="POST" className="flex flex-col w-55">
               <label>Username:</label>
               <input className="bg-gray-200 px-1 py-1" type="text" required/>
               <label>Password:</label>
