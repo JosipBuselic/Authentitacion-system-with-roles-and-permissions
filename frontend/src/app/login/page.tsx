@@ -1,18 +1,36 @@
+"use client"
 import "./login.css"
 import Image from "next/image";
+import { useState } from "react";
 
 export default function Login() {
+  const [username, setUsername] = useState("")
+  const [password, setPassword] = useState("")
+
+  const handleSubmit = async (e: React.FormEvent) =>{
+    e.preventDefault()
+
+    const response = await fetch("/login", {
+      method: "POST",
+      headers: {"content-type": "application/json"},
+      body: JSON.stringify({username: username, password: password})
+    })
+
+    const data = await response.json();
+    alert(data.message)
+  }
+
   return (
     <div className="flex min-h-screen justify-center items-center">
       <div className="bg-white flex flex-col px-5 py-5 items-center shadow-md sm:w-1/3" >
         <h1 className="text-blue-600 text-3xl font-bold my-5">Login</h1>
         
         <div className="flex flex-col items-center">
-            <form action="/login" method="POST" className="flex flex-col w-55">
+            <form onSubmit={handleSubmit} className="flex flex-col w-55">
               <label>Username:</label>
-              <input className="bg-gray-200 px-1 py-1" type="text" required/>
+              <input className="bg-gray-200 px-1 py-1 rounded" type="text" required value={username} onChange={(e) => setUsername(e.target.value)}/>
               <label>Password:</label>
-              <input className="bg-gray-200 px-1 py-1" type="password" required/>
+              <input className="bg-gray-200 px-1 py-1 rounded" type="password" required value={password} onChange={(e) => setPassword(e.target.value)}/>
               <div className="flex items-center">
                 <input type="checkbox" className="mr-2 text-blue-500 rounded-2xl"/>
                 <label>Remember Me</label>
