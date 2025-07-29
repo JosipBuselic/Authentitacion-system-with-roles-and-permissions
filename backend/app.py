@@ -50,7 +50,7 @@ def login_user():
 
     user = User.query.filter_by(username=username).first()
     if not user or not check_password_hash(user.password, password):
-        return jsonify({"message": "Invalid credentials"}), 401
+        return jsonify({"success": "false"}), 401
     
     session["username"] = username
 

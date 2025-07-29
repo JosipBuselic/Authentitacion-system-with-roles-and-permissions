@@ -16,7 +16,8 @@ export default function Login() {
     const response = await fetch("/login", {
       method: "POST",
       headers: {"content-type": "application/json"},
-      body: JSON.stringify({username: username, password: password})
+      body: JSON.stringify({username: username, password: password}),
+      credentials: 'include'
     })
 
     const data = await response.json();
@@ -24,8 +25,10 @@ export default function Login() {
     if(data.success !== "true"){
       alert("nesto nije u redu")
     }
+    else{
+      router.replace("/dashboard")
+    }
 
-    router.replace("/dashboard")
     
   }
 
