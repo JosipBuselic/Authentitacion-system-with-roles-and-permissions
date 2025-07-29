@@ -1,9 +1,12 @@
 "use client"
 import "./login.css"
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 
+
 export default function Login() {
+  const router = useRouter()
   const [username, setUsername] = useState("")
   const [password, setPassword] = useState("")
 
@@ -17,7 +20,13 @@ export default function Login() {
     })
 
     const data = await response.json();
-    alert(data.message)
+
+    if(data.success !== "true"){
+      alert("nesto nije u redu")
+    }
+
+    router.replace("/dashboard")
+    
   }
 
   return (

@@ -1,21 +1,47 @@
+
+"use client"
+import {useRouter} from "next/navigation"
+import { useEffect } from "react"
+
 export default function Home() {
+
+  const router = useRouter()
+
+  const goLogin =  () =>{
+    router.push("/login")
+  }
+
+  const goRegister = () =>{
+    router.push("/register")
+  }
+
+  useEffect(() => {
+    const checkSession = async () => {
+      const res = await fetch('/check-session', {
+        method: 'GET',
+        credentials: 'include',
+      });
+
+      const data = await res.json();
+      if (data.logged_in) {
+        router.replace('/dashboard');
+      }
+    };
+
+    checkSession();
+  }, [router]);
   return (
-    <div className="flex min-h-screen justify-center items-center">
-      <div className="bg-amber-100 flex flex-col px-5 py-5 items-center w-1/5 shadow-md" >
-        <h1 className="text-blue-600 text-3xl font-bold my-5">Login</h1>
-        
-        <div className="flex flex-col items-center">
-            <form action="" className="flex flex-col">
-              <label>Username:</label>
-              <input className="bg-amber-50 px-1 py-1" type="text" required/>
-              <label>Password:</label>
-              <input className="bg-amber-50 px-1 py-1" type="password" required/>
-              <button className="my-5 py-2 bg-blue-300 hover:bg-blue-600 hover:text-white cursor-pointer transition" >Submit</button>
-            </form>
-            <a href="/register" className="underline text-blue-700">Register</a>
-        </div>
-      </div> 
-    </div>
-  
+    <main className="flex flex-col items-center justify-center min-h-screen bg-gray-50 px-4">
+      <h1 className="text-4xl font-bold text-gray-800 mb-6">Welcome to My App</h1>
+      <p className="text-gray-600 mb-10">Please login or register to continue.</p>
+      <div className="flex space-x-4">
+        <button onClick = {goLogin} className="px-6 py-2 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition cursor-pointer">
+          Login
+        </button>
+        <button onClick = {goRegister} className="px-6 py-2 bg-green-600 text-white rounded-xl hover:bg-green-700 transition cursor-pointer">
+          Register
+        </button>
+      </div>
+    </main>
   );
 }

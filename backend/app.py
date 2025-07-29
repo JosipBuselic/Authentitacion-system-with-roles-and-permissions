@@ -1,14 +1,15 @@
-from flask import Flask, send_from_directory, request, jsonify
+from flask import Flask, send_from_directory, request, jsonify, session, redirect
 from flask_cors import CORS
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
 from config import Config
 
-app = Flask(__name__, static_folder="server")
+app = Flask(__name__, static_folder="../frontend/out")
 
-CORS(app)
+CORS(app, supports_credentials=True, origins=["http://localhost:3000"])
 
 app.config.from_object(Config)
+app.secret_key = "3212ldanldnva13/1+-"
 
 db = SQLAlchemy(app)
 
@@ -50,12 +51,13 @@ def login_user():
     user = User.query.filter_by(username=username).first()
     if not user or not check_password_hash(user.password, password):
         return jsonify({"message": "Invalid credentials"}), 401
-
-    return jsonify({"message": "Login successful", "username": user.username}), 200
     
+    session["username"] = username
+
+    return jsonify({"success": "true", "username" : username})
 
 @app.route("/register", methods=["POST"])
-def get_login_page():
+def register_user():
     data = request.json
     username = data.get("username")
     password = data.get("password")
@@ -71,5 +73,27 @@ def get_login_page():
     db.session.add(new_user)
     db.session.commit()
     
+    session["username"] = username
     
-    return jsonify({"message": "User registered successfully"}), 201
+    
+    return jsonify({"success": "true", "username" : username})
+
+@app.route("/dashboard")
+def dashboard_user():
+    return send_from_directory(app.static_folder, "dashboard.html")
+
+@app.route("/check-session", methods=["GET"])
+def check_session():
+    if "username" in session:
+        return jsonify({"logged_in": True, "username": session["username"]})
+    return jsonify({"logged_in": False})
+
+@app.route("/clear-session", methods=["POST"])
+def clear_cookies():
+    session.pop("username", None)
+
+    return jsonify({"success":"true"})
+
+
+if __name__ == "__main__":
+    app.run(port=3000)

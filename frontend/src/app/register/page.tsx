@@ -1,12 +1,14 @@
 
 "use client"
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import "./register.css"
 import { useState } from "react";
 
 
 
 export default function Register() {
+    const router = useRouter()
     const [username, setUsername] = useState("")
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
@@ -21,13 +23,19 @@ export default function Register() {
         e.preventDefault()
 
         const response = await fetch("/register", {
-        method: "POST",
-        headers: {"content-type": "application/json"},
-        body: JSON.stringify({username: username, password: password, email: email})
+            method: "POST",
+            headers: {"content-type": "application/json"},
+            body: JSON.stringify({username: username, password: password, email: email}),
+            credentials: 'include'
         })
 
-        const data = await response.json();
-        alert(data.message)
+        const data = await response.json()
+
+        if(data.success !== "true"){
+         alert("nesto nije u redu")
+        }
+
+        router.replace("/dashboard")
     }
 
     return(
