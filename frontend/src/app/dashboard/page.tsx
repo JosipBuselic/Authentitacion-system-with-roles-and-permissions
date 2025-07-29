@@ -1,9 +1,12 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
+
 
 export default function Dashboard() {
   const router = useRouter();
+  const [username, setUsername] = useState("")
 
   const handleLogout = async () => {
     const response = await fetch("/clear-session", {
@@ -23,11 +26,27 @@ export default function Dashboard() {
     }
   };
 
+  useEffect(() => {
+    const getUsername = async () => {
+      const res = await fetch("/username", {
+        method: "GET",
+        credentials: "include"  // Important to send cookies/session info
+      });
+
+      if(res.ok) {
+        const data = await res.json();
+        setUsername(data.username || "");
+      }
+    };
+
+    getUsername();
+  }, []);
+
   return (
     <main className="min-h-screen bg-gray-100 flex flex-col items-center py-10 px-4">
       <div className="w-full max-w-4xl bg-white shadow-md rounded-xl p-8">
         <h1 className="text-3xl font-bold text-gray-800 mb-4">Dashboard</h1>
-        <p className="text-gray-600 mb-8">Welcome! You are successfully logged in.</p>
+        <p className="text-gray-600 mb-8">Welcome {username}! You are successfully logged in.</p>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="p-4 bg-blue-100 rounded-xl shadow-sm">
