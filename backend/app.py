@@ -94,6 +94,9 @@ def clear_cookies():
 
     return jsonify({"success":"true"})
 
+@app.route("/username", methods=["GET"])
+def username():
+    return jsonify({"username": session.get("username")})
 
 if __name__ == "__main__":
     app.run(port=3000)
