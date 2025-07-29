@@ -36,19 +36,21 @@ export default function Dashboard() {
 
       if(res.ok) {
         const data = await res.json();
-        setUsername(data.username || "");
 
-        if (data.username == ""){
+        if(!data.username){
             router.replace("/")
+        }
+        else{
+            setUsername(data.username || "");
         }
       }
     };
 
     getUsername();
-  }, []);
+  }, [router]);
 
   return (
-    <main className="min-h-screen bg-gray-100 flex flex-col items-center justify-center py-10 px-4">
+    <main className="min-h-screen flex flex-col items-center justify-center py-10 px-4">
       <div className="w-full max-w-4xl bg-white shadow-md rounded-xl p-8">
         <h1 className="text-3xl font-bold text-gray-800 mb-4">Dashboard</h1>
         <p className="text-gray-600 mb-8">Welcome {username}! You are successfully logged in.</p>
