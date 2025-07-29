@@ -40,7 +40,7 @@ export default function Register() {
 
     return(
         <div className="flex min-h-screen justify-center items-center">
-            <div className="bg-white flex flex-col px-5 py-5 items-center sm:w-1/3 shadow-md rounded" >
+            <div className="bg-white flex flex-col px-5 py-5 items-center sm:w-1/3 shadow-md rounded-xl" >
                 <h1 className="text-blue-600 text-3xl font-bold my-5">Register</h1>
                 
                 <div className="flex flex-col items-center">
