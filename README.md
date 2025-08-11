@@ -10,11 +10,7 @@ This project is a full-stack **authentication system** built using modern techno
 - [Screenshots](#screenshots)  
 - [Technologies Used](#technologies-used)  
 - [Setup & Installation](#setup--installation)  
-- [Environment Variables](#environment-variables)  
-- [Usage](#usage)  
-- [Roles and Permissions](#roles-and-permissions)  
-- [Contributing](#contributing)  
-- [License](#license)  
+- [Environment Variables](#environment-variables)
 
 ---
 
