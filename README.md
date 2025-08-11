@@ -26,7 +26,7 @@ This project is a full-stack **authentication system** built using modern techno
 - **Role-Based Access Control:**  
   The system supports roles assigned to users:  
   - **Admin** (role ID 1): Full control except for changing user passwords. Admins can edit user emails, usernames, and roles, including promoting other users to admins.  
-  - **User** (role ID 2): Regular users who can view and edit their own profiles except passwords.
+  - **User** (role ID 2)
 
 - **Admin Panel:**  
   Admin users have access to an admin dashboard where they can view all registered users, edit their details (excluding passwords), and assign roles.
@@ -49,14 +49,24 @@ This project is a full-stack **authentication system** built using modern techno
 
 Below are some screenshots showcasing key parts of the application:
 
-![Login Screen](screenshots/image1.png)  
+![Home](screenshots/home.png)
+*Home design*
+
+![Login Screen](screenshots/login.png)  
 *Login page where users enter their credentials.*
 
-![Admin Dashboard](screenshots/image2.png)  
+![register](screenshots/register.png)  
+*User profile page showing editable details.*
+
+![Admin Dashboard](screenshots/adminpanel.png)  
 *Admin panel for managing users and their roles.*
 
-![User Profile](screenshots/image3.png)  
-*User profile page showing editable details.*
+![Supabase Database](screenshots/database.png)
+*Supabase Database where everything is stored.*
+
+![Edit User](screenshots/edituser.png)
+*Admin can change information about users using his app.*
+
 
 ---
 
@@ -65,6 +75,7 @@ Below are some screenshots showcasing key parts of the application:
 - **Frontend:** Next.js (React)  
 - **Backend:** Flask (Python)  
 - **Database:** Supabase (PostgreSQL)  
+- **ORM:** SQLAlchemy (for database interaction) 
 - **Password Hashing:** Werkzeug  
 - **Authentication & Authorization:** Custom implementation with roles and permissions  
 - **Environment Configuration:** Python dotenv or similar for loading `.env` variables
@@ -82,3 +93,39 @@ Open your terminal and clone the repo using:
 ```bash
 git clone https://github.com/yourusername/authentication-system-with-roles-and-permissions.git
 cd authentication-system-with-roles-and-permissions
+```
+
+
+### 2. Install Backend Dependencies
+
+Navigate to the backend directory and install the required Python packages:
+
+```bash
+pip install -r backend/requirements.txt
+```
+
+### 3. Install Frontend Dependencies and Build the Next.js App
+
+Navigate to the frontend directory and install Node.js dependencies, then build the app:
+
+```bash
+cd frontend
+npm install
+npm run build
+```
+
+### 4. Run the Backend Server
+
+Go back to the backend folder and start the Flask server:
+
+```bash
+cd ../backend
+python3 app.py
+```
+
+### Environment Variables
+
+For the backend Flask server to work correctly, create a .env file inside the backend folder with the following variables:
+
+SECRET_KEY=your_flask_secret_key
+SQLALCHEMY_DATABASE_URI=your_database_connection_string
