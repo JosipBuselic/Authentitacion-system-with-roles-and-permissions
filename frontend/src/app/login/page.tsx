@@ -26,7 +26,12 @@ export default function Login() {
       alert("nesto nije u redu")
     }
     else{
-      router.replace("/dashboard")
+      if(data.roleid == 1){
+        router.replace("/Admin")
+      }
+      else{
+        router.replace("/dashboard")
+      }
     }
 
     

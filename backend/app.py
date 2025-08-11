@@ -2,6 +2,7 @@ from flask import Flask, send_from_directory, request, jsonify, session, redirec
 from flask_cors import CORS
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
+from sqlalchemy import text
 from config import Config
 
 app = Flask(__name__, static_folder="../frontend/out")
@@ -21,6 +22,7 @@ class User(db.Model):
     username = db.Column(db.String, unique=True, nullable=False)
     email = db.Column(db.String, unique=True, nullable=False)
     password = db.Column(db.String, nullable=False)
+    roleid = db.Column(db.Integer, nullable=False)
 
 @app.route('/')
 def index():
@@ -54,7 +56,7 @@ def login_user():
     
     session["username"] = username
 
-    return jsonify({"success": "true", "username" : username})
+    return jsonify({"success": "true", "username" : username, "roleid": user.roleid})
 
 @app.route("/register", methods=["POST"])
 def register_user():
@@ -64,11 +66,12 @@ def register_user():
     email = data.get("email")
     
     existing_user = User.query.filter_by(username=username).first()
-    if existing_user:
+    existing_mail = User.query.filter_by(email=email).first()
+    if existing_user or existing_mail:
         return jsonify({"message": "nije uredu jer vec postoji user"}), 409
     
     hashed_password = generate_password_hash(password)
-    new_user = User(username=username, password=hashed_password, email=email)
+    new_user = User(username=username, password=hashed_password, email=email, roleid=2)
     
     db.session.add(new_user)
     db.session.commit()
@@ -76,7 +79,7 @@ def register_user():
     session["username"] = username
     
     
-    return jsonify({"success": "true", "username" : username})
+    return jsonify({"success": "true", "username" : username, "roleid": 2})
 
 @app.route("/dashboard")
 def dashboard_user():
@@ -99,6 +102,57 @@ def username():
     if not "username" in session:
         return jsonify({"username": ""})
     return jsonify({"username": session["username"]})
+
+@app.route("/Admin", methods=["GET"])
+def admin():
+    if "username" not in session:
+        return redirect("/")
+
+    result = db.session.execute(
+        text("SELECT roleid FROM users WHERE username = :username"),
+        {"username": session["username"]}
+    )
+    row = result.fetchone()
+    if not row or row.roleid != 1:
+        return redirect("/dashboard")
+
+    return send_from_directory(app.static_folder, "admin.html")
+
+@app.route("/admin", methods=["POST"])
+def getallusers():
+    result = db.session.execute(text("SELECT * FROM users"))
+    data = []
+    for row in result:
+        data.append({
+            "id":row.id,
+            "username":row.username,
+            "email":row.email,
+            "roleid":row.roleid
+        })
+        
+    return jsonify(data)
+
+@app.route("/admin/update-user", methods=["POST"])
+def update_user():
+    data = request.get_json()
+    
+    email = data["email"]
+    username = data["username"]
+    roleid = data["roleid"]
+    
+    user = User.query.get(data["id"])
+    
+    if not user:
+        return jsonify({"success": False})
+    
+    user.id = data["id"]
+    user.username = username
+    user.email = email
+    user.roleid = roleid
+    
+    db.session.commit()
+    
+    return jsonify({"success": True}) 
 
 if __name__ == "__main__":
     app.run(port=3000)

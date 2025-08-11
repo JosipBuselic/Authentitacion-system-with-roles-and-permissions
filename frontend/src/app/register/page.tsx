@@ -19,6 +19,7 @@ export default function Register() {
 
         if(password != samepassword){
             alert("password and confirm password are not the same!")
+            return
         }
         e.preventDefault()
 
