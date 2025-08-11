@@ -127,5 +127,7 @@ python3 app.py
 
 For the backend Flask server to work correctly, create a .env file inside the backend folder with the following variables:
 
+```bash
 SECRET_KEY=your_flask_secret_key
 SQLALCHEMY_DATABASE_URI=your_database_connection_string
+```
